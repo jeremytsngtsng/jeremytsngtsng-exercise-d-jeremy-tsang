@@ -9,8 +9,9 @@ const { Title } = Typography;
 
 export default function Result() {
   const game = useGameContext();
-  const { gameContract, setGameContract, move, setMove, salt, setSalt } = useGameContext();
+  const { gameContract, setGameContract, move, setMove } = useGameContext();
   const { address } = useWalletContext();
+  const [salt, setSalt] = useState("");
   const [isTimeout, setIsTimeout] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
 

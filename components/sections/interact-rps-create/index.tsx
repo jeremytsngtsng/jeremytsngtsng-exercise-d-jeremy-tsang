@@ -12,8 +12,9 @@ import { useGameContext } from "context/game-context";
 const { Title } = Typography;
 
 export default function Create() {
-  const { salt, setSalt, move, setMove, setActiveTab, setGameContract, player2, setPlayer2 } = useGameContext();
-  const { address, walletClient,chain } = useWalletContext();
+  const { move, setMove, setActiveTab, setGameContract, player2, setPlayer2 } = useGameContext();
+  const { address, walletClient, chain } = useWalletContext();
+  const [salt, setSalt] = useState("");
   const [stakeAmount, setStakeAmount] = useState(0);
   const [transactionAddress, setTransactionAddress] = useState<`0x${string}` | undefined>();
   const [retryCount, setRetryCount] = useState(0);
@@ -155,7 +156,10 @@ export default function Create() {
           </div>
         </Card>
         <Card className="shadow-md">
-          <Title level={3} className="text-left pb-2">Salt</Title>
+          <div className="flex justify-between pb-2">
+            <Title level={3} className="">Salt</Title>
+            <p className="m-0 text-gray-600 font-medium font-mono">Please securely remember the salt until the game is solved!</p>
+          </div>
           <Row gutter={16}>
             <Col flex="auto">
               <Input
