@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useContractRead, useContractWrite } from "wagmi";
 import rpsAbi from "abi/rps.json";
 import { useWalletContext } from "context/wallet-context";
+import { formatEther } from "ethers";
 
 const { Title } = Typography;
 
@@ -149,7 +150,7 @@ export default function Join() {
                     You are playing against
                   </Title>
                   <Title level={1} className="text-center">
-                    {j1}
+                    {j1} for {formatEther(stake ?stake.toString() : 0)} eth!
                   </Title>
                 </Card>
                 <Card className="shadow-md">

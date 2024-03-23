@@ -3,54 +3,54 @@ import { useEffect, useState } from "react";
 import { useContractRead, useContractWrite } from "wagmi";
 import rpsAbi from "abi/rps.json";
 import { useWalletContext } from "context/wallet-context";
+import { useGameContext } from "context/game-context";
 
 const { Title } = Typography;
 
 export default function Result() {
+  const game = useGameContext();
+  const { gameContract, setGameContract, move, setMove, salt, setSalt } = useGameContext();
   const { address } = useWalletContext();
-  const [contractAddress, setContractAddress] = useState<`0x${string}` | undefined>();
-  const [move, setMove] = useState(0);
-  const [salt, setSalt] = useState("");
   const [isTimeout, setIsTimeout] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
 
   const { data: j1 } = useContractRead<typeof rpsAbi, 'j1', string>({
-    address: contractAddress,
+    address: gameContract,
     abi: rpsAbi,
     functionName: "j1",
     watch: true,
   });
   
   const { data: c2 } = useContractRead<typeof rpsAbi, 'c2', number>({
-    address: contractAddress,
+    address: gameContract,
     abi: rpsAbi,
     functionName: "c2",
     watch: true,
   });
 
   const { data: TIMEOUT, isLoading: isTimeoutLoading } = useContractRead<typeof rpsAbi, 'TIMEOUT', bigint>({
-    address: contractAddress,
+    address: gameContract,
     abi: rpsAbi,
     functionName: "TIMEOUT",
     watch: true,
   });
 
   const { data: lastAction, isLoading: isLastActionLoading } = useContractRead<typeof rpsAbi, 'lastAction', number>({
-    address: contractAddress,
+    address: gameContract,
     abi: rpsAbi,
     functionName: "lastAction",
     watch: true,
   });
 
   const { write: solveGame, isLoading: isSolveLoading, isSuccess: isSolveSuccess } = useContractWrite({
-    address: contractAddress,
+    address: gameContract,
     abi: rpsAbi,
     functionName: "solve",
     args: [move, salt],
   });
 
   const handleSolveGame = async () => {
-    if (!address || !contractAddress || !move || !salt || isTimeout || c2 === undefined) return;
+    if (!address || !gameContract || !move || !salt || isTimeout || c2 === undefined) return;
 
     try {
       await solveGame?.();
@@ -81,6 +81,8 @@ export default function Result() {
     }
   }, [lastAction, TIMEOUT]);
 
+  console.log(game)
+
   return (
     <Card className="shadow-xl">
       <div className="flex flex-col gap-6">
@@ -91,8 +93,8 @@ export default function Result() {
           </Title>
           <Input
             placeholder="Input Contract Address..."
-            value={contractAddress}
-            onChange={(e) => setContractAddress(e.target.value as `0x${string}`)}
+            value={gameContract}
+            onChange={(e) => setGameContract(e.target.value as `0x${string}`)}
             className="text-xl"
           />
         </Card>
@@ -139,7 +141,7 @@ export default function Result() {
                 </Card>
                 <Button
                   onClick={handleSolveGame}
-                  disabled={!address || !contractAddress || !move || !salt || c2 === undefined}
+                      disabled={!address || !gameContract || !move || !salt || c2 === undefined}
                   loading={isSolveLoading}
                   block
                   type="default"

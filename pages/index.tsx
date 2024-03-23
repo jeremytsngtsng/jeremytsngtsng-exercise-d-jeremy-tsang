@@ -7,12 +7,14 @@ import { Button } from "antd";
 import Join from "components/sections/interact-rps-join";
 import Result from "components/sections/interact-rps-result";
 import Claim from "components/sections/interact-rps-claim";
+import { useGameContext } from "context/game-context";
 
 export default function App() {
   const { connect, connectors, disconnect, isConnected, address, name, chain, accountBalance, switchNetwork } =
     useWalletContext();
 
-  const [activeTab, setActiveTab] = useState("");
+
+  const { activeTab, setActiveTab } = useGameContext();
 
   useEffect(() => {
     !isConnected && setActiveTab("");

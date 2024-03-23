@@ -8,6 +8,7 @@ import { publicProvider } from "wagmi/providers/public"
 import { infuraProvider } from "wagmi/providers/infura";
 import "../styles/tailwind.css"
 import { WalletContextProvider } from "context/wallet-context"
+import { GameProvider } from "context/game-context";
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -33,7 +34,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={config}>
       <WalletContextProvider config={config}>
-        <Component {...pageProps} />
+        <GameProvider>
+          <Component {...pageProps} />
+        </GameProvider>
       </WalletContextProvider>
     </WagmiConfig>
   )

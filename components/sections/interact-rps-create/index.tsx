@@ -7,15 +7,14 @@ import rpsAbi from "abi/rps.json";
 import { rpsBytecode } from "bytecode/rpsBytecode";
 import { useWalletContext } from "context/wallet-context";
 import { generateCommitmentHash } from "utils/helper";
+import { useGameContext } from "context/game-context";
 
 const { Title } = Typography;
 
 export default function Create() {
+  const { salt, setSalt, move, setMove, setActiveTab, setGameContract, player2, setPlayer2 } = useGameContext();
   const { address, walletClient,chain } = useWalletContext();
-  const [player2, setPlayer2] = useState("");
   const [stakeAmount, setStakeAmount] = useState(0);
-  const [move, setMove] = useState(0);
-  const [salt, setSalt] = useState("");
   const [transactionAddress, setTransactionAddress] = useState<`0x${string}` | undefined>();
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 20;
@@ -53,6 +52,12 @@ export default function Create() {
       return () => clearTimeout(timer);
     }
   }, [isError, retryCount, refetch]);
+
+  useEffect(() => {
+    if (txReceipt?.contractAddress) {
+      setGameContract(txReceipt.contractAddress)
+    }
+  }, [txReceipt?.contractAddress])
 
   const handleCreateGame = async () => {
     if (!address || !player2 || !move || !salt) return;
@@ -185,9 +190,14 @@ export default function Create() {
           <Card className="shadow-md">
             <Title level={3}>Game created successfully!</Title>
             <p className="text-xl mb-4">Contract Address: {txReceipt?.contractAddress}</p>
-            <Button onClick={copyContractAddressAsQuery}>
-              Copy Contract Address as URL Query
-            </Button>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={copyContractAddressAsQuery}>
+                Copy Contract Address as URL Query
+              </Button>
+              <Button onClick={() => setActiveTab("result")}>
+                Go to solve!
+              </Button>
+            </div>
           </Card>
         )}
       </div>
