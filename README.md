@@ -1,6 +1,10 @@
+
 # Rock Paper Scissors Spock Lizard Game
 
 This is a dapp on testnet Spolia chain for playing Rock Paper Scissors Spock Lizard using smart contracts and MetaMask wallet. The game contract is deployed when a new game is created, and Infura is used as a faster and more stable provider.
+
+## DApp URL
+https://jeremytsngtsng-exercise-d-jeremy-tsang.vercel.app/
 
 ## Features
 
